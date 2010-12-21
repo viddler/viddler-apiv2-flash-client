@@ -5,7 +5,7 @@ package {
 	
 	public class Main extends Sprite {
 		
-		private static const API_KEY:String = '21c01df11b8ec675ce4741524152142';
+		private static const API_KEY:String = APIKEY::garar;
 		
 		private var client:ViddlerApiClient;
 		
