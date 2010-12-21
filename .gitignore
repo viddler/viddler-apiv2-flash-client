@@ -1,0 +1,8 @@
+.project
+.actionScriptProperties
+.settings/
+bin-debug/
+bin-release/
+html-template/
+target/
+.FlexUnitSettings/

@@ -1,0 +1,2 @@
+Viddler apiv2 flash client in really alpha stage, only one method is working:
+viddler.playlist.getDetails
