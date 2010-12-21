@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="viddler-apiv2-flash-client" basedir=".">
+
+	<!--
+		Properties, this should contain FLEX_HOME variable
+	-->
+
+	<property file="${user.name}.properties" />
+
+	<!--
+		Task definitions
+	-->
+
+	<taskdef name="compc" classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" classname="flex.ant.CompcTask" />
+
+	<target name="build-swc" description="--> build swc">
+		<compc output="target/viddler-apiv2-flash-client.swc" include-classes="com.viddler.api.v2.client.ViddlerApiClient">
+			<compiler.source-path path-element="src/main/flash" />
+		</compc>
+	</target>
+
+</project>
