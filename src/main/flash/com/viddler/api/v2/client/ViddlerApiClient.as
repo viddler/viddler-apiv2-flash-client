@@ -34,7 +34,7 @@ package com.viddler.api.v2.client {
 			
 			this.loggingFunction = loggingFunction;
 			
-			_playlists = new Playlists(requestHelper);
+			_playlists = new Playlists(this.requestHelper);
 		}
 		
 		private function logger(msg:String):void {
