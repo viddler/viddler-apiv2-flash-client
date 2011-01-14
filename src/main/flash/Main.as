@@ -11,7 +11,7 @@ package {
 		
 		public function Main() {
 			client = new ViddlerApiClient(API_KEY, ViddlerApiClient.API_ENDPOINT, clientLog);
-			client.playlists.getDetails('718a076f7414e6e9', true, onPlaylistsGetDetailsResult, onPlaylistsGetDetailsError); 
+			client.playlists.getDetails('718a076f7414e6e9', onPlaylistsGetDetailsResult, onPlaylistsGetDetailsError, true); 
 		}
 		
 		private function onPlaylistsGetDetailsResult(result:Object):void {

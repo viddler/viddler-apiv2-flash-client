@@ -12,11 +12,15 @@ package com.viddler.api.v2.client {
 			this.requestHelper = requestHelper;
 		}
 		
-		public function getDetails(playlistId:String, idOnly:Boolean, resultListener:Function, errorListener:Function):void {
+		public function getDetails(playlistId:String, resultListener:Function, errorListener:Function, idOnly:Boolean = false, pageInfo:PageInfo = null):void {
+			var params:Object = {'playlist_id' : playlistId, 'id_only' : idOnly};
+			if (pageInfo != null) {
+				params['page'] = pageInfo.page;
+				params['per_page'] = pageInfo.perPage;
+			}
 			requestHelper.get('viddler.playlists.getDetails', 
-				new PlaylistResult(), 
-				{'playlist_id' : playlistId, 'id_only' : idOnly}, 
-				resultListener, errorListener); 			
+				new PlaylistResult(),  params, 
+				resultListener, errorListener);
 		}
 		
 	}
