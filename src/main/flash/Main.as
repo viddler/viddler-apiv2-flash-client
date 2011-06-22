@@ -5,13 +5,24 @@ package {
 	
 	public class Main extends Sprite {
 		
-		private static const API_KEY:String = APIKEY::garar;
+		private static const API_KEY:String = CONFIG::key;
+		private static const API_ENDPOINT:String = CONFIG::endpoint;
 		
 		private var client:ViddlerApiClient;
 		
 		public function Main() {
-			client = new ViddlerApiClient(API_KEY, ViddlerApiClient.API_ENDPOINT, clientLog);
-			client.playlists.getDetails('718a076f7414e6e9', onPlaylistsGetDetailsResult, onPlaylistsGetDetailsError, true); 
+			client = new ViddlerApiClient(API_KEY, API_ENDPOINT, clientLog);
+			//client.playlists.getDetails('7a87326c7717e5ea', onPlaylistsGetDetailsResult, onPlaylistsGetDetailsError, true);
+			//client.videos.getEmbedCodeTypes(onResult,onError);
+			client.videos.getEmbedCode(onResult,onError,'c51d2ea8',4);
+		}
+		
+		private function onResult(res:Object):void {
+			trace('result:' + res);			
+		}
+		
+		private function onError(err:Object):void {
+			trace('error:' + err);			
 		}
 		
 		private function onPlaylistsGetDetailsResult(result:Object):void {

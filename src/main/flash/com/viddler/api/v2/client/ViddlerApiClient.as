@@ -15,6 +15,8 @@ package com.viddler.api.v2.client {
 		
 		private var _playlists:Playlists;
 		
+		private var _videos:Videos;
+		
 		private var apiEndpoint:String;
 		
 		public function ViddlerApiClient(apiKey:String, apiEndpoint:String = null, loggingFunction:Function = null, requestHelper:RequestHelper = null) {
@@ -35,6 +37,8 @@ package com.viddler.api.v2.client {
 			this.loggingFunction = loggingFunction;
 			
 			_playlists = new Playlists(this.requestHelper);
+			_videos = new Videos(this.requestHelper);
+			
 		}
 		
 		private function logger(msg:String):void {
@@ -45,6 +49,10 @@ package com.viddler.api.v2.client {
 		
 		public function get playlists():Playlists {
 			return _playlists;
+		}
+		
+		public function get videos():Videos {
+			return _videos;
 		}
 		
 	}

@@ -3,6 +3,7 @@ package com.viddler.api.v2.client.transport {
 	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
@@ -36,13 +37,20 @@ package com.viddler.api.v2.client.transport {
 			logger('DefaultRequestHelper.request, httpMethod: ' + httpMethod + 
 				', method: ' + method + ', params: ' + params + 
 				', resultListener: ' + resultListener + ', errorListener: ' + errorListener);
+			
 			var loader:URLLoader = new URLLoader();
 			loader.addEventListener(IOErrorEvent.IO_ERROR, function(event:IOErrorEvent):void {
 				logger('error, event: ' + event);
+				errorListener(event.text);
 			});
-			loader.addEventListener(Event.COMPLETE, function(event:Event):void {
+			
+			loader.addEventListener(Event.COMPLETE, function(event:Event):void {				
 				XMLParser.parse(new XML(loader.data), result);
 				resultListener(result);
+			});
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, function(event:SecurityErrorEvent):void {
+				errorListener(event.text);
+				logger('error, message: ' + event.text);
 			});
 			var url:String = constructUrl(method, params);
 			logger('DefaultRequestHelper.request, url: ' + url);

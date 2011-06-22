@@ -1,4 +1,6 @@
 package com.viddler.api.v2.client.utils {
+	import com.viddler.api.v2.client.model.EmbedCodeType;
+	import com.viddler.api.v2.client.model.EmbedCodeTypesResult;
 	import com.viddler.api.v2.client.model.Playlist;
 	import com.viddler.api.v2.client.model.Video;
 	import com.viddler.api.v2.client.model.VideoList;
@@ -14,17 +16,30 @@ package com.viddler.api.v2.client.utils {
 
 		public static function parse(xml:XML, object:Object):void {
 			initParsers();
-			var fields:XMLList = describeType(object)..variable;	
-			for (var i:Number = 0; i < fields.length(); i++) {
-				var name:String = fields[i].@name;
-				var type:String = fields[i].@type;
-				var parser:Function = parsers[type];
-				if (parser != null) {
-					object[name] = parser(xml.child(getTagName(name)));
-				} else {
-					throw new Error('unknown type: ' + type);
+			var description:XML = describeType(object); 
+			var fields:XMLList = description..variable;			
+			var className:String = description.@name;			
+			var parser:Function = parsers[className];
+			var i:int;
+			
+			if (parser!=null) {
+				var res:Object = parser(XMLList(xml));
+				for (i = 0; i < fields.length(); i++) {
+					var fname:String = fields[i].@name; 
+					object[fname] = res[fname]; 
 				}
-			}
+			} else {
+				for (i = 0; i < fields.length(); i++) {
+					var name:String = fields[i].@name;
+					var type:String = fields[i].@type;
+					parser = parsers[type];
+					if (parser != null) {
+						object[name] = parser(xml.child(getTagName(name)));
+					} else {
+						throw new Error('unknown type: ' + type);
+					}
+				}
+			}			
 		}
 		
 		private static function initParsers():void {
@@ -35,6 +50,7 @@ package com.viddler.api.v2.client.utils {
 				addParser(Number, parseNumber);
 				addParser(VideoList, parseVideoList);
 				addParser(Playlist, parsePlaylist);
+				addParser(EmbedCodeTypesResult, parseEmbedCodeTypesResult);
 			}
 		}
 		
@@ -66,14 +82,26 @@ package com.viddler.api.v2.client.utils {
 			return videoList;
 		}
 		
+		private static function parseEmbedCodeTypesResult(xml:XMLList):EmbedCodeTypesResult {
+			var res:EmbedCodeTypesResult = new EmbedCodeTypesResult;			
+			var children:XMLList = xml.embed_code_types.embed_code_type;
+			for each (var child:XML in children) {
+				var embedCodeType:EmbedCodeType = new EmbedCodeType;
+				XMLParser.parse(child,embedCodeType);
+				res.embedCodeTypes.push(embedCodeType);
+			}
+			res.defaultType = xml.default;
+			return res;
+		}
+		
 		private static function parsePlaylist(xml:XMLList):Playlist {
 			var playlist:Playlist = new Playlist();
 			XMLParser.parse(xml[0], playlist);
 			return playlist;
-		}
+		}	
 		
 		private static function getTagName(name:String):String {
-			var tagName:String = name.replace(/([A-Z])/, '_$1');
+			var tagName:String = name.replace(/([A-Z])/g, '_$1');
 			return tagName.toLowerCase();
 		}
 		
