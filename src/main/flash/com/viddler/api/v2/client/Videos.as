@@ -16,7 +16,7 @@ package com.viddler.api.v2.client {
 		public function getEmbedCode(resultListener:Function, errorListener:Function, videoId:String, 
 									 embedCodeType:Number = NaN, playerType:String = null, wmode:String = null,
 									 offset:Number = NaN, branding:Boolean = true, autoplay:Boolean = false, 
-									 width:Number = NaN, height:Number = NaN):void {
+									 width:Number = NaN, height:Number = NaN, secretCode:String = null):void {
 			
 			var parameters:Object = {video_id:videoId, branding:branding, autoplay:autoplay};
 			
@@ -42,6 +42,10 @@ package com.viddler.api.v2.client {
 			
 			if (playerType!=null) {
 				parameters.player_type = playerType;
+			}
+			
+			if (secretCode!=null) {
+				parameters.view_secret = secretCode;
 			}
 			
 			requestHelper.get('viddler.videos.getEmbedCode', 
