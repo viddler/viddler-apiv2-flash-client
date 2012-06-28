@@ -12,6 +12,8 @@ package com.viddler.api.v2.client.utils {
 	
 	public class XMLParser {
 		
+//		private static const logger:Logger = Logger.forClass(XMLParser);
+		
 		private static var parsers:Dictionary;
 
 		public static function parse(xml:XML, object:Object):void {
@@ -22,7 +24,9 @@ package com.viddler.api.v2.client.utils {
 			var parser:Function = parsers[className];
 			var i:int;
 			
-			if (parser!=null) {
+//			logger.warning('className: {}, parser: {}', [className, parser]);
+			
+			if (parser != null) {
 				var res:Object = parser(XMLList(xml));
 				for (i = 0; i < fields.length(); i++) {
 					var fname:String = fields[i].@name; 
@@ -58,6 +62,8 @@ package com.viddler.api.v2.client.utils {
 			parsers[getQualifiedClassName(clazz)] = parser;
 		}
 		
+		
+		
 		private static function parseString(xml:XMLList):String {
 			return xml.text();
 		}
@@ -71,12 +77,15 @@ package com.viddler.api.v2.client.utils {
 		}
 		
 		private static function parseVideoList(xml:XMLList):VideoList {
+//			logger.warning('parseVideoList, xml: {}', [xml]);
 			var videoList:VideoList = new VideoList();
 			var children:XMLList = xml.video;
 			videoList.videos = [];
 			for each (var child:XML in children) {
+//				logger.warning('child: {}', [child.thumbnail_url]);
 				var video:Video = new Video();
-				XMLParser.parse(child, video);
+				video.id = child.id;
+				video.thumbnailUrl = child.thumbnail_url;
 				videoList.videos.push(video);
 			}
 			return videoList;
@@ -95,14 +104,32 @@ package com.viddler.api.v2.client.utils {
 		}
 		
 		private static function parsePlaylist(xml:XMLList):Playlist {
+//			logger.warning('parsePlaylist, xml: {}', [getClassName(xml[0])]);
 			var playlist:Playlist = new Playlist();
-			XMLParser.parse(xml[0], playlist);
+//			<playlist>
+//				<id>718a076f7414e6e9</id>
+//				<name>test</name>
+//				<type>regular</type>
+//				<visibility>public</visibility>
+//				<user>garar</user>
+//			  </playlist>
+//			XMLParser.parse(xml[0], playlist);
+			playlist.id = xml.@id;
+			playlist.name = xml.@name;
+			playlist.type = xml.@type;
+			playlist.visibility = xml.@visibility;
+			playlist.user = xml.@user;
+//			XMLParser.parse(xml[0], playlist);
 			return playlist;
 		}	
 		
 		private static function getTagName(name:String):String {
 			var tagName:String = name.replace(/([A-Z])/g, '_$1');
 			return tagName.toLowerCase();
+		}
+		
+		private static function getClassName(value:*):String {
+			return getQualifiedClassName(value).split('::').pop();
 		}
 		
 	}
