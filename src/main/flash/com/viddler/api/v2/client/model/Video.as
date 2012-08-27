@@ -9,6 +9,8 @@ package com.viddler.api.v2.client.model {
 		
 		public var thumbnailUrl:String;
 		
+		public var title:String;
+		
 		public function toString():String {
 			return ReflectionToStringBuilder.toString(this);
 		}

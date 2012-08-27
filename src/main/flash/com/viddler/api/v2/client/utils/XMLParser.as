@@ -86,6 +86,7 @@ package com.viddler.api.v2.client.utils {
 				var video:Video = new Video();
 				video.id = child.id;
 				video.thumbnailUrl = child.thumbnail_url;
+				video.title = child.title;
 				videoList.videos.push(video);
 			}
 			return videoList;
